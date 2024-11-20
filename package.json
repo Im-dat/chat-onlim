@@ -1,9 +1,16 @@
 {
-  "name": "chat-app",
+  "name": "nova-pasta",
   "version": "1.0.0",
-  "description": "Sistema básico de chat em tempo real com grupos e canais",
-  "main": "api/server.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
   "dependencies": {
-    "socket.io": "^4.7.2"
+    "express": "^4.21.1",
+    "socket.io": "^4.8.1"
   }
 }
