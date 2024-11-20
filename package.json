@@ -1,0 +1,9 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "Sistema básico de chat em tempo real com grupos e canais",
+  "main": "api/server.js",
+  "dependencies": {
+    "socket.io": "^4.7.2"
+  }
+}
