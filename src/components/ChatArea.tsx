@@ -1,22 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Video } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import MessageInput from './MessageInput';
+import VideoCall from './VideoCall';
 
 export default function ChatArea() {
-  const { currentChannel, messages } = useApp();
+  const { currentChannel, messages, isInCall, setIsInCall } = useApp();
+  
+  const startCall = () => {
+    setIsInCall(true);
+  };
 
   return (
     <div className="flex-1 flex flex-col bg-gray-700">
       <div className="bg-gray-800 p-4 flex items-center justify-between border-b border-gray-900">
         <div className="flex items-center space-x-2">
           <h3 className="text-white font-semibold"># {currentChannel?.name}</h3>
-          <span className="text-gray-400 text-sm">Channel description</span>
+          <span className="text-gray-400 text-sm">{currentChannel?.description}</span>
         </div>
         <div className="flex items-center space-x-4">
-          <button className="text-gray-400 hover:text-white">
-            <Video className="w-5 h-5" />
-          </button>
+          {currentChannel?.type === 'voice' && (
+            <button 
+              onClick={startCall}
+              className="text-gray-400 hover:text-white"
+            >
+              <Video className="w-5 h-5" />
+            </button>
+          )}
           <button className="text-gray-400 hover:text-white">
             <Plus className="w-5 h-5" />
           </button>
@@ -54,6 +64,8 @@ export default function ChatArea() {
       </div>
 
       <MessageInput />
+      
+      {isInCall && <VideoCall onClose={() => setIsInCall(false)} />}
     </div>
   );
 }

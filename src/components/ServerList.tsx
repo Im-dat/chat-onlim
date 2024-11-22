@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import CreateServerModal from './CreateServerModal';
 
 export default function ServerList() {
   const { currentServer, setCurrentServer, servers } = useApp();
+  const [isCreateServerOpen, setIsCreateServerOpen] = useState(false);
 
   return (
     <div className="w-20 bg-gray-900 flex flex-col items-center py-4 space-y-4">
@@ -21,9 +23,17 @@ export default function ServerList() {
           </span>
         </button>
       ))}
-      <button className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-green-500 hover:bg-green-500 hover:text-white transition-all duration-200">
+      <button 
+        onClick={() => setIsCreateServerOpen(true)}
+        className="w-12 h-12 bg-gray-800 rounded-full flex items-center justify-center text-green-500 hover:bg-green-500 hover:text-white transition-all duration-200"
+      >
         <Plus className="w-6 h-6" />
       </button>
+
+      <CreateServerModal 
+        isOpen={isCreateServerOpen}
+        onClose={() => setIsCreateServerOpen(false)}
+      />
     </div>
   );
 }

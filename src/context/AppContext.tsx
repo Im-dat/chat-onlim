@@ -11,8 +11,13 @@ interface AppContextType {
   sendMessage: (content: string, image?: string | null) => void;
   currentUser: User | null;
   setCurrentUser: (user: User) => void;
+  updateUser: (user: User) => void;
   servers: Server[];
+  createServer: (server: Server) => void;
+  createChannel: (channel: Channel) => void;
   isUserSetup: boolean;
+  isInCall: boolean;
+  setIsInCall: (inCall: boolean) => void;
 }
 
 const initialServers: Server[] = [
@@ -31,7 +36,8 @@ const initialServers: Server[] = [
     icon: <Users className="w-6 h-6" />,
     channels: [
       { id: '3', name: 'announcements', type: 'text' },
-      { id: '4', name: 'general', type: 'text' }
+      { id: '4', name: 'general', type: 'text' },
+      { id: '5', name: 'voice-lounge', type: 'voice' }
     ]
   }
 ];
@@ -43,6 +49,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentServer, setCurrentServer] = useState<Server>(initialServers[0]);
   const [currentChannel, setCurrentChannel] = useState<Channel>(initialServers[0].channels[0]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [servers, setServers] = useState(initialServers);
+  const [isInCall, setIsInCall] = useState(false);
 
   const sendMessage = (content: string, image?: string | null) => {
     if (!currentUser) return;
@@ -55,6 +63,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       image: image || undefined
     };
     setMessages([...messages, newMessage]);
+  };
+
+  const updateUser = (user: User) => {
+    setCurrentUser(user);
+  };
+
+  const createServer = (server: Server) => {
+    setServers([...servers, server]);
+    setCurrentServer(server);
+    setCurrentChannel(server.channels[0]);
+  };
+
+  const createChannel = (channel: Channel) => {
+    const updatedServer = {
+      ...currentServer,
+      channels: [...currentServer.channels, channel]
+    };
+    
+    setServers(servers.map(server => 
+      server.id === currentServer.id ? updatedServer : server
+    ));
+    setCurrentServer(updatedServer);
+    setCurrentChannel(channel);
   };
 
   const isUserSetup = currentUser !== null;
@@ -70,8 +101,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         sendMessage,
         currentUser,
         setCurrentUser,
-        servers: initialServers,
-        isUserSetup
+        updateUser,
+        servers,
+        createServer,
+        createChannel,
+        isUserSetup,
+        isInCall,
+        setIsInCall
       }}
     >
       {children}
